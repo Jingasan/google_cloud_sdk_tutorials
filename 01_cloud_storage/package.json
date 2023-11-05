@@ -1,0 +1,22 @@
+{
+  "name": "01_cloud_storage",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.mts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/storage": "^7.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "tsx": "^3.14.0",
+    "typescript": "^5.2.2"
+  }
+}
