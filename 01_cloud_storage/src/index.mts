@@ -149,36 +149,12 @@ const deleteObject = async (
   path: string
 ): Promise<boolean> => {
   try {
-    const [res] = await gcsClient.bucket(bucketName).file(path).delete();
-    console.log(`${res.statusCode}: ${res.statusMessage}`);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-};
-
-/**
- * ファイルアップロード用のPresignedURLの取得
- * @param bucketName バケット名
- * @param path 対象のパス
- * @returns PresignedURL
- */
-const getPutPresignedURL = async (
-  bucketName: string,
-  path: string
-): Promise<string | false> => {
-  const cfg: GCS.GetSignedUrlConfig = {
-    version: "v2",
-    action: "write",
-    expires: Date.now() + 24 * 60 * 60 * 1000, // 有効期限24h
-  };
-  try {
-    const [url] = await gcsClient
+    const [res] = await gcsClient
       .bucket(bucketName)
       .file(path)
-      .getSignedUrl(cfg);
-    return url;
+      .delete({ ignoreNotFound: true });
+    console.log(`${res.statusCode}: ${res.statusMessage}`);
+    return true;
   } catch (err) {
     console.error(err);
     return false;
@@ -218,11 +194,6 @@ const runAll = async () => {
   for (const objPath of objectList) {
     await deleteObject(bucketName, objPath);
   }
-
-  // ファイルアップロード用のPresignedURLの作成
-  console.log(">>> Get PresignURL");
-  const url = await getPutPresignedURL(bucketName, "folder/file.json");
-  console.log("PresignedURL: " + url);
 
   // バケットの削除
   console.log(">>> Delete bucket");
