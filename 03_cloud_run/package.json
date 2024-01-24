@@ -1,0 +1,22 @@
+{
+  "name": "03_cloud_run",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.mts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/run": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.6",
+    "tsx": "^3.14.0",
+    "typescript": "^5.3.3"
+  }
+}
