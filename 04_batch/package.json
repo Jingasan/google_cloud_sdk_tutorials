@@ -1,0 +1,22 @@
+{
+  "name": "04_batch",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.mts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/batch": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.6",
+    "tsx": "^3.14.0",
+    "typescript": "^5.3.3"
+  }
+}
