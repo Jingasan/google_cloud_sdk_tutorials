@@ -11,7 +11,7 @@ if (process.argv.length != 4) {
 
 /**
  * サービス一覧の取得
- * @param projectId プロジェクト名
+ * @param projectId プロジェクトID
  * @param region リージョン
  * @returns サービス一覧
  */
@@ -36,7 +36,7 @@ const listServices = async (
 
 /**
  * ジョブ一覧の取得
- * @param projectId プロジェクト名
+ * @param projectId プロジェクトID
  * @param region リージョン
  * @returns ジョブ一覧
  */
