@@ -58,13 +58,13 @@ const listJobs = async (projectId: string, region: string) => {
 
 /**
  * ジョブの実行(実行完了まで待機しない場合)
- * @param jobName 実行対象のジョブ名
+ * @param jobId 実行対象のジョブ名
  * @returns true:成功/false:失敗
  */
-const runJob = async (jobName: string): Promise<boolean> => {
+const runJob = async (jobId: string): Promise<boolean> => {
   try {
     await gcrJobClient.runJob({
-      name: jobName,
+      name: jobId,
     });
     return true;
   } catch (err) {
@@ -75,13 +75,13 @@ const runJob = async (jobName: string): Promise<boolean> => {
 
 /**
  * ジョブの実行(実行完了まで待機する場合)
- * @param jobName 実行対象のジョブ名
+ * @param jobId 実行対象のジョブ名
  * @returns true:成功/false:失敗
  */
-const runJobAsync = async (jobName: string): Promise<boolean> => {
+const runJobAsync = async (jobId: string): Promise<boolean> => {
   try {
     const [operation] = await gcrJobClient.runJob({
-      name: jobName,
+      name: jobId,
     });
     await operation.promise();
     return true;
@@ -92,15 +92,15 @@ const runJobAsync = async (jobName: string): Promise<boolean> => {
 };
 
 /**
- * 実行中のジョブ一覧の取得
- * @param jobName ジョブ名
- * @returns 実行中のジョブ一覧
+ * ジョブの実行中タスク一覧取得
+ * @param jobId ジョブID
+ * @returns 実行中のタスク一覧
  */
-const listProcessingJobs = async (jobName: string): Promise<string[]> => {
+const listJobTask = async (jobId: string): Promise<string[]> => {
   const list: string[] = [];
   try {
     const iterable = gcrExecutionJobClient.listExecutionsAsync({
-      parent: jobName,
+      parent: jobId,
     });
     for await (const response of iterable) {
       if (response.reconciling || response.runningCount > 0)
@@ -114,16 +114,14 @@ const listProcessingJobs = async (jobName: string): Promise<string[]> => {
 };
 
 /**
- * 実行中のジョブのキャンセル
- * @param processingJobName 実行中のジョブ名
+ * 実行中のタスクのキャンセル
+ * @param taskId 実行中のタスクID
  * @returns true:成功/false:失敗
  */
-const cancelProcessingJob = async (
-  processingJobName: string
-): Promise<boolean> => {
+const cancelJobTask = async (taskId: string): Promise<boolean> => {
   try {
     await gcrExecutionJobClient.cancelExecution({
-      name: processingJobName,
+      name: taskId,
     });
     return true;
   } catch (err) {
@@ -153,24 +151,24 @@ const runAll = async (): Promise<void> => {
 
   // ジョブの実行
   console.log(">>> Execute job and wait until done");
-  for (const jobName of jobList) {
-    await runJobAsync(jobName);
+  for (const jobId of jobList) {
+    await runJobAsync(jobId);
   }
   console.log(">>> Execute job");
-  for (const jobName of jobList) {
-    await runJob(jobName);
+  for (const jobId of jobList) {
+    await runJob(jobId);
   }
 
-  for (const jobName of jobList) {
-    // 実行中のジョブ一覧の取得
-    console.log(">>> List processing jobs");
-    const processingJobList = await listProcessingJobs(jobName);
-    console.log(processingJobList);
-    // 実行中のジョブのキャンセル
-    console.log(">>> Cancel processing jobs");
-    for (const processingJobName of processingJobList) {
-      console.log(processingJobName);
-      await cancelProcessingJob(processingJobName);
+  for (const jobId of jobList) {
+    // ジョブの実行中のタスク一覧取得
+    console.log(">>> List job tasks");
+    const taskList = await listJobTask(jobId);
+    console.log(taskList);
+    // 実行中のタスクのキャンセル
+    console.log(">>> Cancel job tasks");
+    for (const taskId of taskList) {
+      console.log(taskId);
+      await cancelJobTask(taskId);
     }
   }
 };
