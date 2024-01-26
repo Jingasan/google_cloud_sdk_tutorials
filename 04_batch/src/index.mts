@@ -133,6 +133,11 @@ const listJobs = async (
   }
 };
 
+/**
+ * ジョブの削除
+ * @param jobId 削除対象のジョブID
+ * @returns true:成功/false:失敗
+ */
 const deleteJob = async (jobId: string): Promise<boolean> => {
   try {
     await batchClient.deleteJob({
